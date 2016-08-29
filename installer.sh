@@ -42,7 +42,7 @@ mkdir -p /scripts
 cat <<EOF > /scripts/start.sh
 #!/bin/bash
 cd /SERVER
-java -Xms$memoryM -Xmx$memoryM -jar server.jar nogui
+java -Xms"$memory"M -Xmx"$memory"M -jar server.jar nogui
 EOF
 
 wget http://tcpr.ca/files/spigot/spigot-1.10.2-R0.1-SNAPSHOT-latest.jar -O /SERVER/server.jar &> /dev/null
@@ -127,7 +127,7 @@ sleep 2
 
 echo "Cleaning up installation files..."
 
-rm -rf /tmp/FlamesCP-2
+rm -rf /tmp/FlamesCP-2-master
 
 sleep 3
 
