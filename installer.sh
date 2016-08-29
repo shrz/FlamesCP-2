@@ -60,7 +60,7 @@ service iptables restart &> /dev/null
 echo "Now installing dependencies..."
 
 yum install epel-release -y &> /dev/null
-yum install screen nano httpd mysql-server php php-mysql php-pdo php-gd unzip gcc make sudo java7 git curl curl-devel vsftpd pam_mysql -y &> /dev/null
+yum install screen nano httpd mysql-server php php-mysql php-pdo php-gd unzip gcc make sudo java7 git curl curl-devel vsftpd pam pam-devel pam_mysql -y &> /dev/null
 
 echo "The required packages have been installed."
 sleep 1
@@ -121,8 +121,11 @@ EON
 
 echo "Configuring FTP..."
 
+vsftpdpassword=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
 mysql -uroot -p$mysqlpass -e "CREATE DATABASE vsftpd;"
 mysql -uroot -p$mysqlpass -e "USE vsftpd; CREATE TABLE `accounts` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `username` VARCHAR(30) NOT NULL, `pass` VARCHAR(50) NOT NULL , UNIQUE(`username`)) ENGINE = MYISAM ;"
+mysql -uroot -p$mysqlpass -e "GRANT SELECT ON vsftpd.* TO 'vsftpd'@'localhost' IDENTIFIED BY '$vsftpdpassword';"
+
 useradd -G users -s /sbin/nologin -d /SERVER  
 cp -v /etc/vsftpd/vsftpd.conf   /etc/vsftpd/vsftpd.conf-orig 
 echo "" > /etc/vsftpd/vsftpd.conf
@@ -130,6 +133,12 @@ cp /tmp/FlamesCP-2-master/extra/vsftpd.conf /etc/vsftpd/vsftpd.conf
 mkdir /etc/vsftpd/vsftpd_user_conf 
 cp /etc/pam.d/vsftpd /etc/pam.d/vsftpd-orig
 cat /dev/null > /etc/pam.d/vsftpd
+cat<<EOY > /etc/pam.d/vsftpd
+ #%PAM-1.0
+ session       optional        pam_keyinit.so       force revoke
+ auth required pam_mysql.so user=vsftpd passwd=$vsftpdpassword  host=localhost db=vsftpd table=accounts usercolumn=username   passwdcolumn=pass crypt=3
+ account required pam_mysql.so user=vsftpd passwd=$vsftpdpassword  host=localhost db=vsftpd table=accounts usercolumn=username  passwdcolumn=pass crypt=3
+EOY
 
 echo "Starting flamescpd..."
 
