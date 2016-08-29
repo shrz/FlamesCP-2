@@ -45,6 +45,8 @@ cd /SERVER
 java -Xms$memoryM -Xmx$memoryM -jar server.jar nogui
 EOF
 
+wget http://tcpr.ca/files/spigot/spigot-1.10.2-R0.1-SNAPSHOT-latest.jar -O /SERVER/server.jar &> /dev/null
+
 sleep 1
 
 echo "Configuring iptables..."
@@ -58,7 +60,7 @@ service iptables restart &> /dev/null
 echo "Now installing dependencies..."
 
 yum install epel-release -y &> /dev/null
-yum install screen nano httpd mysql-server php php-mysql php-pdo php-gd unzip gcc make sudo java7 git -y &> /dev/null
+yum install screen nano httpd mysql-server php php-mysql php-pdo php-gd unzip gcc make sudo java7 git curl curl-devel -y &> /dev/null
 
 echo "The required packages have been installed.
 sleep 1
@@ -70,6 +72,18 @@ mysqlpass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 service mysqld start &> /dev/null
 
 mysql -uroot -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('$mysqlpass'); flush privileges;"
+
+echo "Please enter an alphanumeric password for the administrative user."
+read adminpass
+hashedpw=$(echo -n "$adminpass" | md5sum | sed 's/  -//g')
+mysql -uroot -p$mysqlpass -e "create database flamescp;"
+mysql -uroot -p$mysqlpass -e "use flamescp; insert into login (id, username, password, status) VALUES(1, 'admin', '$hashedpw', 'admin');"
+
+cat <<EON > /usr/local/flamescp/include/config.php
+
+\$mysqlpass = "$mysqlpass";
+
+EON
 
 echo "Retrieving files from repository..."
 cd /tmp
@@ -86,8 +100,46 @@ mkdir -p /usr/sbin
 cp /tmp/FlamesCP-2/daemon/flamescpd /usr/sbin/flamescpd
 chmod 755 /usr/bin/flamescpd
 
+cp /tmp/FlamesCP-2/extras/init /etc/init.d/flamescpd
+chmod 755 /etc/init.d/flamescpd
+
+cat <<'EOG' > /etc/httpd/conf.d/flamescp.conf
+
+Listen 5555
+<VirtualHost *:5555>
+        ServerName localhost:5555
+        ServerAdmin user@localhost
+        DocumentRoot /usr/local/flamescp
+</VirtualHost>
+
+EOG
+
 echo "Starting flamescpd..."
 
+service flamescpd start &> /dev/null
 
+sleep 2
 
+echo "Cleaning up installation files..."
+
+rm -rf /tmp/FlamesCP-2
+
+sleep 3
+
+clear
+
+yourpubip=`curl -q -s icanhazip.com`
+
+echo "-----------------------------------------------------------------------------"
+echo "Congratulations! You have successfully installed FlamesCP 2."
+echo " "
+echo "Default administrator details:"
+echo "Username: admin"
+echo "Password: $adminpw"
+echo " "
+echo "-----------------------------------------------------------------------------"
+echo " "
+echo "You may log in to the control panel via http://$yourpubip:5555"
+echo " "
+sleep 1
 
