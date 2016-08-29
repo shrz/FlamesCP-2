@@ -11,7 +11,7 @@ include 'include/header.php';
 $mydb = 'vsftpd';
 $db = new PDO("mysql:host=$server;dbname=$mydb", $username, $password);
 
-if($_SESSION['username'] !== "FlamesRunner"){
+if($_SESSION['username'] !== "admin"){
 ?>
 
 <body>
