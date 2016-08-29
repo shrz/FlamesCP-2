@@ -1,4 +1,4 @@
-![FlamesCP Logo](https://raw.githubusercontent.com/FlamesRunner/FlamesCP-2/master/assets/flamescplogo.png)
+![FlamesCP Logo](https://raw.githubusercontent.com/FlamesRunner/FlamesCP-2/master/flamescp2.png)
 
 # FlamesCP 2.0
 a lightweight control panel for single minecraft servers
