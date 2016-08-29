@@ -18,6 +18,7 @@ if ($logged_in == "true"){
 <button class="btn btn-success" id="startserver">Start server</button>
 <button class="btn btn-danger" id="stopserver">Stop server</button>
 <a href="accounts.php" class="btn btn-info">Account manager</a>
+<a href="ftp.php" class="btn btn-primary">FTP manager</a>
 <a href="password.php" class="btn btn-warning">Change your password</a>
 <a href="logout.php" class="btn btn-default">Log out</a>
 </div>
@@ -71,11 +72,25 @@ echo '<div class="alert alert-danger"><b>Missing username and/or password.</b></
 
 ?>
 
-<form action="login.php" method="POST">
+<form action="login.php" method="POST" id="loginform">
 <input class="form-control input-lg" name="username" placeholder="Username..." style="margin-top: 20px; margin-right: auto; margin-bottom: 20px; margin-left: auto; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; border-radius: 7px;" type="text" required="required">
 <input class="form-control input-lg" name="password" placeholder="Password..." style="margin-top: 20px; margin-right: auto; margin-bottom: 20px; margin-left: auto; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; border-radius: 7px;" type="password" required="required">
 <br />
 <input class="btn btn-success btn-lg btn-block" value="Log in" type="submit">
+
+<script>
+
+$('#loginform').submit(function()
+ {
+    $("input[type='submit']", this)
+      .val("Please wait...")
+      .attr('disabled', 'disabled');
+
+    return true;
+  });
+
+</script>
+
 </form>
 </div>
 </div>
