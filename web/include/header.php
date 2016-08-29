@@ -50,7 +50,7 @@ $(document).ready(function() {
 	    $.get('status.php', function(data) {
 	        $('#srvstatus').html(data);
 	    });
-	}, 3000); // 5 seconds
+	}, 3000); // refresh status every 3 seconds
 
 });
 
