@@ -22,7 +22,7 @@ if($_GET['getLog']){
 <html>
 	<title>Log</title>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<div class="container">
+<div class="container-fluid">
 	<style>
 		@import url(http://fonts.googleapis.com/css?family=Ubuntu);
 		body{
@@ -40,12 +40,14 @@ if($_GET['getLog']){
 		}
 		#log {
 			position: relative;
-			top: -34px;
+			/*top: -34px;*/
+			top: -12px;
 		}
 		#scrollLock{
 			width:2px;
-			height: 2px;
-			overflow:visible;
+			height: 0px;
+			/* overflow:visible; */
+			overflow: hidden;
 		}
 	</style>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
@@ -79,7 +81,6 @@ if($_GET['getLog']){
 		}
 	</script>
 	<body>
-		<h4><?php echo $logFile; ?></h4>
 		<div id="log">
 			
 		</div>
