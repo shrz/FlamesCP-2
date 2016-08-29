@@ -1,53 +1,29 @@
 #!/bin/bash
 
-if [[ $EUID -ne 0 ]]; then
-echo "This should only be executed as the root user."
-exit 0
-fi
+# Remove pipe if it already exists
 
-# Delete old pipe if it already exists
 rm -rf /var/run/flamescp.sock
 
-# Create pipe in /var/run/flamescp.sock 
+# Create pipe in /var/run/flamescp.sock
 mkfifo /var/run/flamescp.sock
-
 chmod 777 /var/run/flamescp.sock
-
-echo "flamescpd: started"
-
 while true; do
 
-while read line; do 
-
-echo "[`date -u`] Command received: ${line}" > /var/log/flamescp.log
-echo "[`date -u`] Command received: ${line}"; 
+while read line; do
+echo "[`date -u`] Received: ${line}" > /tmp/flamescp.log
+echo "[`date -u`] Received: ${line}"
 
 if [ "$line" == "start" ]; then
-
-proclist=$(ps aux)
-findjava=$(echo "$proclist" | grep java)
-
-if [ -z "$findjava" ]; then
-screen -dmS mcserver "/scripts/start.sh"
-else
-fi
-
+screen -dmS mcserver /scripts/start.sh
 else if [ "$line" == "stop" ]; then
-
-screen -dmS flamescpjob "/scripts/stop.sh"
-
+screen -dmS flamescpjob /scripts/stop.sh
 else
-
 /scripts/sendcmd.sh "$line"
-
 fi
 fi
-
 
 
 done</var/run/flamescp.sock
 
 done
 
-rm -rf /var/run/flamescp.sock
-echo "flamescpd stopped"
