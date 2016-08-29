@@ -60,7 +60,7 @@ service iptables restart &> /dev/null
 echo "Now installing dependencies..."
 
 yum install epel-release -y &> /dev/null
-yum install screen nano httpd mysql-server php php-mysql php-pdo php-gd unzip gcc make sudo java7 git curl curl-devel -y &> /dev/null
+yum install screen nano httpd mysql-server php php-mysql php-pdo php-gd unzip gcc make sudo java7 git curl curl-devel vsftpd pam_mysql -y &> /dev/null
 
 echo "The required packages have been installed."
 sleep 1
@@ -118,6 +118,18 @@ cat <<EON > /usr/local/flamescp/include/config.php
 ?>
 
 EON
+
+echo "Configuring FTP..."
+
+mysql -uroot -p$mysqlpass -e "CREATE DATABASE vsftpd;"
+mysql -uroot -p$mysqlpass -e "USE vsftpd; CREATE TABLE `accounts` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `username` VARCHAR(30) NOT NULL, `pass` VARCHAR(50) NOT NULL , UNIQUE(`username`)) ENGINE = MYISAM ;"
+useradd -G users -s /sbin/nologin -d /SERVER  
+cp -v /etc/vsftpd/vsftpd.conf   /etc/vsftpd/vsftpd.conf-orig 
+echo "" > /etc/vsftpd/vsftpd.conf
+cp /tmp/FlamesCP-2-master/extra/vsftpd.conf /etc/vsftpd/vsftpd.conf
+mkdir /etc/vsftpd/vsftpd_user_conf 
+cp /etc/pam.d/vsftpd /etc/pam.d/vsftpd-orig
+cat /dev/null > /etc/pam.d/vsftpd
 
 echo "Starting flamescpd..."
 
