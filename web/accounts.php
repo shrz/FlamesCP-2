@@ -8,7 +8,7 @@ die();
 session_start();
 include 'include/header.php';
 
-if($_SESSION['username'] !== "FlamesRunner"){
+if($_SESSION['username'] !== "admin"){
 ?>
 
 <body>
