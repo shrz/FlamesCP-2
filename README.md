@@ -5,7 +5,7 @@ a lightweight control panel for single minecraft servers
 
 ## Notes
 The server should be running CentOS 6.x 64 bit, but it might run on CentOS 6.x 32 bit (not tested).
-This panel is licensed under the GNU GPLv3 license which can be found here: https://www.gnu.org/licenses/lgpl.txt
+This panel is licensed under the GNU GPLv3 license which can be found here: https://www.gnu.org/licenses/gpl-3.0.txt
 
 ## Dependencies
 This control panel uses: 
