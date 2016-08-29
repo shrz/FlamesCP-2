@@ -11,6 +11,7 @@ if ($logged_in == "true"){
 <div class="container">
 <div class="jumbotron">
 <h2><b>FlamesCP 2 - Minecraft Control Panel</b></h2>
+<p><b>Server status:</b> <span id="srvstatus"></span></p>
 <br />
 <div id="msgarea"></div>
 <div class="btn-group">

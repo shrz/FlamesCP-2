@@ -41,6 +41,12 @@ $(document).ready(function() {
 
     });
 
+	setInterval(function(){
+	    $.get('status.php', function(data) {
+	        $('#srvstatus').html(data);
+	    });
+	}, 3000); // 5 seconds
+
 });
 
 $(document).on('submit', '#cmdform', function(e) {
