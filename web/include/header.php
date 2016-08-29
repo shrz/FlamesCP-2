@@ -21,15 +21,16 @@ padding-top: 20px;
    margin-right: auto;
    margin-left: auto;
 }
+
+.iframediv {
+border-radius: 10px;
+width: 100%;
+overfloy: hidden;
+}
 </style>
 
 <script>
 $(document).ready(function() {
-
-    $.get('status.php', function(data) {
-	  $('#srvstatus').html(data);
-    });
-	
     $("#startserver").click(function(){
 
 	$.get( "start_server.php", function( data ) {
@@ -46,11 +47,15 @@ $(document).ready(function() {
 
     });
 
+           $.get('status.php', function(data) {
+                $('#srvstatus').html(data);
+            });
+
 	setInterval(function(){
 	    $.get('status.php', function(data) {
 	        $('#srvstatus').html(data);
 	    });
-	}, 3000); // refresh status every 3 seconds
+	}, 3000); // 5 seconds
 
 });
 

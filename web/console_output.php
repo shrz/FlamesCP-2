@@ -1,13 +1,3 @@
-<!--<body style="background: transparent">-->
-<?php
-include 'include/login.php';
-if ($logged_in == "false"){
-header("Location: /");
-die();
-}
-
-?>
-
 <?php
 /*
  * Easy PHP Tail 
@@ -19,18 +9,25 @@ die();
 $logFile = "/SERVER/logs/latest.log"; // local path to log file
 $interval = 1000; //how often it checks the log file for changes, min 100
 $textColor = ""; //use CSS color
+
+
+
 // Don't have to change anything bellow
 if(!$textColor) $textColor = "white";
 if($interval < 100)  $interval = 100; 
 if($_GET['getLog']){
-	echo system("tail ".$logFile." -n 50");
+	echo file_get_contents($logFile);
 }else{
-include 'include/header.php';
 ?>
+<html>
+	<title>Log</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<div class="container">
 	<style>
 		@import url(http://fonts.googleapis.com/css?family=Ubuntu);
 		body{
 			background-color: black;
+			background: black;
 			color: <?php echo $textColor; ?>;
 			font-family: 'Ubuntu', sans-serif;
 			font-size: 16px;
@@ -51,7 +48,7 @@ include 'include/header.php';
 			overflow:visible;
 		}
 	</style>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
 	<script>
 		setInterval(readLogFile, <?php echo $interval; ?>);
 		window.onload = readLogFile; 
@@ -82,14 +79,11 @@ include 'include/header.php';
 		}
 	</script>
 	<body>
-		
-	<div id="log">
+		<h4><?php echo $logFile; ?></h4>
+		<div id="log">
 			
 		</div>
-<div class="container">
-<p class="small"><b>Settings</b></p>
-		<div id="scrollLock"><input class="disableScrollLock btn btn-success btn-sm" type="button" value="Automatic scrolling enabled. Press me to disable." /> <input class="enableScrollLock btn btn-danger btn-sm" style="display: none;" type="button" value="Automatic scrolling disabled. Press me to enable." /></div></div><br> </br>
+		<div id="scrollLock"> <input style="display: none" class="disableScrollLock" type="button" value="Disable Scroll Lock" /> <input class="enableScrollLock" style="display: none;" type="button" value="Enable Scroll Lock" /></div>
 	</body>
-<br>
 </html>
 <?php  } ?>
