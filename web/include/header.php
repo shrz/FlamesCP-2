@@ -25,6 +25,11 @@ padding-top: 20px;
 
 <script>
 $(document).ready(function() {
+
+    $.get('status.php', function(data) {
+	  $('#srvstatus').html(data);
+    });
+	
     $("#startserver").click(function(){
 
 	$.get( "start_server.php", function( data ) {
