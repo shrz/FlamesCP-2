@@ -62,7 +62,7 @@ echo "Now installing dependencies..."
 yum install epel-release -y &> /dev/null
 yum install screen nano httpd mysql-server php php-mysql php-pdo php-gd unzip gcc make sudo java7 git curl curl-devel -y &> /dev/null
 
-echo "The required packages have been installed.
+echo "The required packages have been installed."
 sleep 1
 
 echo "Configuring MySQL..."
@@ -77,7 +77,8 @@ echo "Please enter an alphanumeric password for the administrative user."
 read adminpass
 hashedpw=$(echo -n "$adminpass" | md5sum | sed 's/  -//g')
 mysql -uroot -p$mysqlpass -e "create database flamescp;"
-mysql -uroot -p$mysqlpass -e "use flamescp; insert into login (id, username, password, status) VALUES(1, 'admin', '$hashedpw', 'admin');"
+mysql -uroot -p$mysqlpass -e "use flamescp; CREATE TABLE login(id int(10) NOT NULL AUTO_INCREMENT, username varchar(255) NOT NULL, password varchar(255) NOT NULL, status varchar(50), PRIMARY KEY (id));"
+mysql -uroot -p$mysqlpass -e "insert into login (id, username, password, status) VALUES(1, 'admin', '$hashedpw', 'admin');"
 
 cat <<EON > /usr/local/flamescp/include/config.php
 
