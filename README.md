@@ -15,7 +15,12 @@ This control panel uses:
 - MySQL PDO
 
 ##Installation
-Check out the wiki to find out how to install FlamesCP.
+Installing FlamesCP 2 is pretty simple - all you have to do is execute the following as the root user:
+
+    cd ~
+    wget https://raw.githubusercontent.com/FlamesRunner/FlamesCP-2/master/installer.sh
+    chmod 755 installer.sh
+    ./installer.sh
 
 ## Support
 
@@ -23,4 +28,4 @@ You may contact me at andrew@andrew-hong.me or alternatively you may contact a c
 Thanks!
 
 ## Credits
-Special thanks to Thomas Depole, for his PHP tailing code.
+Special thanks to Thomas Depole for his PHP tailing code.

@@ -106,14 +106,14 @@ echo "Please enter an alphanumeric password for the administrative user."
 read adminpass
 hashedpw=$(echo -n "$adminpass" | md5sum | sed 's/  -//g')
 mysql -uroot -p$mysqlpass -e "create database flamescp;"
-mysql -uroot -p$mysqlpass -e "use flamescp; CREATE TABLE login(id int(10) NOT NULL AUTO_INCREMENT, username varchar(255) NOT NULL, password varchar(255) NOT NULL, status varchar(50), PRIMARY KEY (id));"
+mysql -uroot -p$mysqlpass -e "use flamescp; CREATE TABLE login (id int(10) NOT NULL AUTO_INCREMENT, username varchar(255) NOT NULL, password varchar(255) NOT NULL, status varchar(50), PRIMARY KEY (id));"
 mysql -uroot -p$mysqlpass -e "use flamescp; insert into login (id, username, password, status) VALUES(1, 'admin', '$hashedpw', 'admin');"
 
 cat <<EON > /usr/local/flamescp/include/config.php
 
 <?php
 
-\$mysqlpass = "$mysqlpass";
+\$mysql_password = "$mysqlpass";
 
 ?>
 
@@ -135,12 +135,14 @@ clear
 
 yourpubip=`curl -q -s icanhazip.com`
 
+service httpd restart &> /dev/null
+
 echo "-----------------------------------------------------------------------------"
 echo "Congratulations! You have successfully installed FlamesCP 2."
 echo " "
 echo "Default administrator details:"
 echo "Username: admin"
-echo "Password: $adminpw"
+echo "Password: $adminpass"
 echo " "
 echo "-----------------------------------------------------------------------------"
 echo " "
