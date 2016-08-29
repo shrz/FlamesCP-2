@@ -62,8 +62,37 @@ echo "Now installing dependencies..."
 yum install epel-release -y &> /dev/null
 yum install screen nano httpd mysql-server php php-mysql php-pdo php-gd unzip gcc make sudo java7 git curl curl-devel -y &> /dev/null
 
-echo "The required packages have been installed.
+echo "The required packages have been installed."
 sleep 1
+
+echo "Retrieving files from repository..."
+cd /tmp
+wget https://github.com/FlamesRunner/FlamesCP-2/archive/master.zip
+unzip master.zip
+cd FlamesCP-2-master
+mkdir -p /usr/local/flamescp
+cp -R /tmp/FlamesCP-2-master/web/* /usr/local/flamescp/
+
+mkdir -p /scripts
+cp -R /tmp/FlamesCP-2-master/scripts/* /scripts/
+
+mkdir -p /usr/sbin
+cp /tmp/FlamesCP-2-master/daemon/flamescpd /usr/sbin/flamescpd
+chmod 755 /usr/bin/flamescpd
+
+cp /tmp/FlamesCP-2-master/extra/init /etc/init.d/flamescpd
+chmod 755 /etc/init.d/flamescpd
+
+cat <<'EOG' > /etc/httpd/conf.d/flamescp.conf
+
+Listen 5555
+<VirtualHost *:5555>
+        ServerName localhost:5555
+        ServerAdmin user@localhost
+        DocumentRoot /usr/local/flamescp
+</VirtualHost>
+
+EOG
 
 echo "Configuring MySQL..."
 
@@ -77,42 +106,18 @@ echo "Please enter an alphanumeric password for the administrative user."
 read adminpass
 hashedpw=$(echo -n "$adminpass" | md5sum | sed 's/  -//g')
 mysql -uroot -p$mysqlpass -e "create database flamescp;"
+mysql -uroot -p$mysqlpass -e "use flamescp; CREATE TABLE login(id int(10) NOT NULL AUTO_INCREMENT, username varchar(255) NOT NULL, password varchar(255) NOT NULL, status varchar(50), PRIMARY KEY (id));"
 mysql -uroot -p$mysqlpass -e "use flamescp; insert into login (id, username, password, status) VALUES(1, 'admin', '$hashedpw', 'admin');"
 
 cat <<EON > /usr/local/flamescp/include/config.php
 
+<?php
+
 \$mysqlpass = "$mysqlpass";
 
+?>
+
 EON
-
-echo "Retrieving files from repository..."
-cd /tmp
-wget https://github.com/FlamesRunner/FlamesCP-2/archive/master.zip
-unzip master.zip
-cd FlamesCP-2
-mkdir -p /usr/local/flamescp
-cp -R /tmp/FlamesCP-2/web/* /usr/local/flamescp/
-
-mkdir -p /scripts
-cp -R /tmp/FlamesCP-2/scripts/* /scripts/
-
-mkdir -p /usr/sbin
-cp /tmp/FlamesCP-2/daemon/flamescpd /usr/sbin/flamescpd
-chmod 755 /usr/bin/flamescpd
-
-cp /tmp/FlamesCP-2/extras/init /etc/init.d/flamescpd
-chmod 755 /etc/init.d/flamescpd
-
-cat <<'EOG' > /etc/httpd/conf.d/flamescp.conf
-
-Listen 5555
-<VirtualHost *:5555>
-        ServerName localhost:5555
-        ServerAdmin user@localhost
-        DocumentRoot /usr/local/flamescp
-</VirtualHost>
-
-EOG
 
 echo "Starting flamescpd..."
 
