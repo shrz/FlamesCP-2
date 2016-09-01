@@ -8,7 +8,7 @@ rm -rf /var/run/flamescp.sock
 
 # Create pipe in /var/run/flamescp.sock
 mkfifo /var/run/flamescp.sock
-chmod 777 /var/run/flamescp.sock
+chmod 722 /var/run/flamescp.sock
 
 while true; do
 
