@@ -110,7 +110,7 @@ echo '<div class="alert alert-danger"><b>The username has already been taken.<b/
 
 $create = $conn->prepare('insert into login (username, password, status) VAlUES (:username, :password, "admin");');
 $create->bindParam(':username', $_POST['username']);
-$create->bindParam(':password', md5($_POST['password']));
+$create->bindParam(':password', sha1($_POST['password']));
 $create->execute();
 
 echo '<div class="alert alert-success">Account created. Click <a href="accounts.php">here</a> to reload the page.</div>';
