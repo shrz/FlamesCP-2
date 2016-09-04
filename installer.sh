@@ -109,10 +109,15 @@ mysql -uroot -p$mysqlpass -e "create database flamescp;"
 mysql -uroot -p$mysqlpass -e "use flamescp; CREATE TABLE login (id int(10) NOT NULL AUTO_INCREMENT, username varchar(255) NOT NULL, password varchar(255) NOT NULL, status varchar(50), PRIMARY KEY (id));"
 mysql -uroot -p$mysqlpass -e "use flamescp; insert into login (id, username, password, status) VALUES(1, 'admin', '$hashedpw', 'admin');"
 
+sleep 2
+
+salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)
+
 cat <<EON > /usr/local/flamescp/include/config.php
 
 <?php
 
+\$salt = "$salt";
 \$mysql_password = "$mysqlpass";
 
 ?>

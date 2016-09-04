@@ -5,7 +5,7 @@ if (!empty($_POST['username']) && !empty($_POST['password'])){
 
 $username = $_POST['username'];
 $password = $_POST['password'];
-$encrypted_password = sha1($password);
+$encrypted_password = crypt($password, $salt);
 
 $check = $conn->prepare('select * from login where username=:username and password=:password');
 $check->bindParam(":username", $username);
