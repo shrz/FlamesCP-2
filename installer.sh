@@ -59,8 +59,9 @@ service iptables restart &> /dev/null
 
 echo "Now installing dependencies..."
 
-yum install epel-release -y &> /dev/null
-yum install screen nano httpd mysql-server php php-mysql php-pdo php-gd unzip gcc make sudo java7 git curl curl-devel vsftpd pam pam-devel pam_mysql -y &> /dev/null
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
+yum install screen nano httpd mysql-server php55w php55w-mysql php55w-pdo php55w-gd unzip gcc make sudo java7 git curl curl-devel vsftpd pam pam-devel pam_mysql -y &> /dev/null
 
 echo "The required packages have been installed."
 sleep 1
@@ -129,10 +130,10 @@ echo "Configuring FTP..."
 vsftpdpassword=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
 mysql -uroot -p$mysqlpass -e "CREATE DATABASE vsftpd;"
 mysql -uroot -p$mysqlpass -e "USE vsftpd; CREATE TABLE `accounts` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `username` VARCHAR(30) NOT NULL, `pass` VARCHAR(50) NOT NULL , UNIQUE(`username`)) ENGINE = MYISAM ;"
-mysql -uroot -p$mysqlpass -e "GRANT SELECT ON vsftpd.* TO 'vsftpd'@'localhost' IDENTIFIED BY '$vsftpdpassword';"
+mysql -uroot -p$mysqlpass -e "use vsftpd; GRANT SELECT ON vsftpd.* TO 'vsftpd'@'localhost' IDENTIFIED BY '$vsftpdpassword'; flush privileges;"
 
 useradd -G users -s /sbin/nologin -d /SERVER  
-cp -v /etc/vsftpd/vsftpd.conf   /etc/vsftpd/vsftpd.conf-orig 
+cp /etc/vsftpd/vsftpd.conf   /etc/vsftpd/vsftpd.conf-orig 
 echo "" > /etc/vsftpd/vsftpd.conf
 cp /tmp/FlamesCP-2-master/extra/vsftpd.conf /etc/vsftpd/vsftpd.conf
 mkdir /etc/vsftpd/vsftpd_user_conf 
