@@ -9,7 +9,7 @@ This panel is licensed under the GNU GPLv3 license which can be found here: http
 
 ## Dependencies
 This control panel uses: 
-- PHP 5.3+ 
+- PHP 5.5+ 
 - CentOS 5.x/6.x 64 bit
 - Apache (other webservers not currently supported - add support if you want) 
 - PHP GD module 
