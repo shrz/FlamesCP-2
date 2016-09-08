@@ -16,7 +16,11 @@ $textColor = ""; //use CSS color
 if(!$textColor) $textColor = "white";
 if($interval < 100)  $interval = 100; 
 if($_GET['getLog']){
-	echo file_get_contents($logFile);
+        $consoletext = file_get_contents($logFile);
+        $consoletext = preg_replace("/\[0;(.*);22m/", '', $consoletext);
+        $consoletext = preg_replace("/\[0;(.*);1m/", '', $consoletext);
+        $consoletext = preg_replace("/\[m/", '', $consoletext);
+        echo $consoletext;
 }else{
 ?>
 <html>
