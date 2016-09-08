@@ -24,7 +24,7 @@ $password = $_POST['newpassword'];
 
 $query = $conn->prepare('update login set password=:password where username=:username');
 
-$query->bindParam(':password', crypt($_POST['password']), $salt);
+$query->bindParam(':password', crypt($_POST['password'], $salt));
 $query->bindParam(':username', $_SESSION['username']);
 
 $query->execute();
