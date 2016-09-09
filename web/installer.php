@@ -16,7 +16,7 @@ if (!empty($_POST['password'])){
 $password = crypt($_POST['password'], $salt);
 $query = $conn->prepare('insert into login (username, password, status) VAlUES (:username, :password, "admin");');
 $query->bindParam(':username', 'admin');
-$query->bindParam(':password', crypt($_POST['password'], $salt));
+$query->bindParam(':password', password_hash($_POST['password'], $bcrypt_opt));
 
 if($query->execute()){
 //destroy installer since installation was successful
