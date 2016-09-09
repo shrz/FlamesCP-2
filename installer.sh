@@ -103,10 +103,10 @@ service mysqld start &> /dev/null
 
 mysql -uroot -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('$mysqlpass'); flush privileges;"
 
-echo "Please enter an alphanumeric password for the administrative user."
-read adminpass
+#echo "Please enter an alphanumeric password for the administrative user."
+#read adminpass
 cost=$(php /scripts/bcrypt_cost.php)
-hashedpw=$(php /scripts/bcrypt.php $adminpass $cost)
+#hashedpw=$(php /scripts/bcrypt.php $adminpass $cost)
 mysql -uroot -p$mysqlpass -e "create database flamescp;"
 mysql -uroot -p$mysqlpass -e "use flamescp; CREATE TABLE login (id int(10) NOT NULL AUTO_INCREMENT, username varchar(255) NOT NULL, password varchar(255) NOT NULL, status varchar(50), PRIMARY KEY (id));"
 #mysql -uroot -p$mysqlpass -e "use flamescp; insert into login (id, username, password, status) VALUES(1, 'admin', '$hashedpw', 'admin');"
@@ -119,7 +119,7 @@ cat <<EON > /usr/local/flamescp/include/config.php
 
 <?php
 
-\$bcrypt_opt = array ("cost" => $cost);
+\$bcrypt_opt = array("cost" => $cost);
 \$mysql_password = "$mysqlpass";
 
 ?>
