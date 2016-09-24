@@ -6,13 +6,13 @@
 . /etc/init.d/functions
 # Start the service MAT
 start() {
-        screen -dmS flamescpd /usr/sbin/flamescpd
+        nohup /usr/sbin/flamescpd &
         service httpd start &> /dev/null
         echo "flamescpd: Started daemon!"
 }
 # Restart the service MAT
 stop() {
-        screen -S flamescpd -X quit
+        pkill -9 flamescpd
         screen -S mcserver -X quit
         echo "flamescpd: Stopped daemon and killed any running minecraft servers."
 }
