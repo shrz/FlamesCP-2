@@ -30,6 +30,7 @@ if($_GET['getLog']){
         $consoletext = preg_replace("/\[0;(.*);22m/", '', $consoletext);
         $consoletext = preg_replace("/\[0;(.*);1m/", '', $consoletext);
         $consoletext = preg_replace("/\[m/", '', $consoletext);
+	$consoletext = strip_tags($consoletext);
         echo $consoletext;
 }else{
 ?>
