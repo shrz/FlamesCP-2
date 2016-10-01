@@ -1,135 +1,111 @@
 <?php
-include 'include/login.php';
-if ($logged_in == "false"){
-header("Location: /");
-die();
+require 'include/application.php';
+
+include 'include/header-internal.php';
+
+if ($_SESSION['username'] !== "admin") {
+    $errorMessage = 'You do not have permission to manage accounts.';
+    require 'templates/access-denied.php';
+
+    die();
 }
 
-session_start();
-include 'include/header.php';
+if ($_POST['act'] == "remove" && !empty($_POST['account'])) : ?>
 
-if($_SESSION['username'] !== "admin"){
-?>
+    <?php if ($_POST['account'] == "admin") : ?>
+        <div class="alert alert-info">
+            <b>This account is protected.</b>
+        </div>
+    <?php else : ?>
+        <?php
+        $delquery = $conn->prepare('delete from login where username=:userdel');
+        $delquery->bindParam(':userdel', $_POST['account']);
+        $delquery->execute();
+        ?>
 
-<body>
-<br />
-<br />
-<div class="container">
-<div class="row">
-<div class="col-md-4 col-center">
-<div class="jumbotron">
-<h2 style="text-align: center"><b>Access Denied</b></h2>
-<br />
-<p style="text-align: center">You do not have permission to manage accounts. Click <a href="/">here</a> to go back.</p>
-</div>
-</div>
-</div>
-</div>
-</body>
-</html>
+        <div class="alert alert-danger">
+            <b>The account <?= $_POST['account']; ?> has been removed.</b>
+        </div>
+    <?php endif; ?>
 
-<?php
-} else {
-?>
-
-
-<body>
-<br />
-<br />
-<div class="container">
-<div class="jumbotron">
-<h2><b>FlamesCP 2 - Account Manager</b><span style="font-size: 12px">&nbsp;&nbsp;<a href="/">Return to dashboard</a></span></h2>
-<br />
-<br />
-<?php
-if ($_POST['act'] == "remove" && !empty($_POST['account'])){
-
-if ($_POST['account'] == "admin"){
-echo '<div class="alert alert-info"><b>This account is protected.</b></div>';
-} else {
-$delquery = $conn->prepare('delete from login where username=:userdel');
-$delquery->bindParam(':userdel', $_POST['account']);
-$delquery->execute();
-echo '<div class="alert alert-danger"><b>The account '.$_POST['account'].' has been removed.</b></div>';
-}
-
-}
-?>
+<?php endif; ?>
 <div class="table-responsive">
-<table class="table table-bordered">
-<thead>
-<tr>
-<th>Account ID</th>
-<th>Username</th>
-<th>Actions</th>
-</tr>
-</thead>
-<tbody>
-<?php
-$query = $conn->prepare('select * from login');
-$query->execute();
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Account ID</th>
+            <th>Username</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        $logins = $conn->prepare('select * from login');
+        $logins->execute();
+        ?>
 
-foreach ($query as $row) {
-
-echo '<tr>';
-
-echo '<td>'.$row["id"].'</td>';
-echo '<td>'.$row["username"].'</td>';
-
-if ($row['id'] == "1"){
-echo '<td>N/A</td>';
-} else {
-echo '<td><form action="accounts.php" method="POST"><input type="hidden" name="act" value="remove"><input type="hidden" name="account" value="'.$row["username"].'"><input class="btn btn-danger btn-block" value="Remove account" type="submit"></form></td>';
-}
-
-echo '</tr>';
-
-}
-?>
-</tbody>
-</table>
+        <?php foreach ($logins as $login) : ?>
+            <tr>
+                <td><?= $login["id"]; ?></td>
+                <td><?= $login["username"]; ?></td>
+                <td>
+                <?php if ($login['id'] == "1") : ?>
+                    N/A
+                <?php else : ?>
+                    <form action="accounts.php" method="POST">
+                        <input type="hidden" name="act" value="remove">
+                        <input type="hidden" name="account" value="<?= $login["username"]; ?>">
+                        <input class="btn btn-danger btn-block" value="Remove account" type="submit">
+                    </form>
+                <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
-<br />
+<br/>
+
 <h3>Create account</h3>
-<br />
-<?php
-if ($_POST['act'] == "create"){
-if (empty($_POST['username']) || empty($_POST['password'])){
-echo '<div class="alert alert-info"><b>Seems like you missed something.</b></div>';
-} else {
+<br/>
+<?php if ($_POST['act'] == "create") : ?>
 
-$check = $conn->prepare('select * from login where username=:account');
-$check->bindParam(':account', $_POST['username']);
-$check->execute();
+    <?php if (empty($_POST['username']) || empty($_POST['password'])) : ?>
+        <div class="alert alert-info">
+            <b>Seems like you missed something.</b>
+        </div>
+    <?php else : ?>
+        <?php
+        $check = $conn->prepare('select * from login where username=:account');
+        $check->bindParam(':account', $_POST['username']);
+        $check->execute();
+        ?>
 
-if ($check->rowCount() > 0) {
+        <?php if ($check->rowCount() > 0) : ?>
+            <div class="alert alert-danger">
+                <b>The username has already been taken.<b/>
+            </div>
+        <?php else : ?>
+            <?php
+            $create = $conn->prepare('insert into login (username, password, status) VAlUES (:username, :password, "admin");');
+            $create->bindParam(':username', $_POST['username']);
+            $create->bindParam(':password', password_hash($_POST['password'], PASSWORD_BCRYPT, $bcrypt_opt));
+            $test = $create->execute();
+            ?>
 
-echo '<div class="alert alert-danger"><b>The username has already been taken.<b/></div>';
-
-} else {
-
-$create = $conn->prepare('insert into login (username, password, status) VAlUES (:username, :password, "admin");');
-$create->bindParam(':username', $_POST['username']);
-$create->bindParam(':password', password_hash($_POST['password'], PASSWORD_BCRYPT, $bcrypt_opt));
-$create->execute();
-
-echo '<div class="alert alert-success">Account created. Click <a href="accounts.php">here</a> to reload the page.</div>';
-
-}
-}
-}
-?>
+            <div class="alert alert-success">
+                Account created. Click <a href="accounts.php">here</a> to reload the page.
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+<?php endif; ?>
 <form action="accounts.php" method="POST">
-<input name="act" type="hidden" value="create">
-<input class="form-control" name="username" placeholder="The account's username...">
-<br />
-<input class="form-control" name="password" placeholder="The account's password..." type="password">
-<br />
-<input class="btn btn-success btn-block" type="submit" value="Create account">
+    <input name="act" type="hidden" value="create">
+    <input class="form-control" name="username" placeholder="The account's username...">
+    <br/>
+    <input class="form-control" name="password" placeholder="The account's password..." type="password">
+    <br/>
+    <input class="btn btn-success btn-block" type="submit" value="Create account">
 </form>
-</div>
-</div>
-</body>
-</html>
-
-<?php } ?>
+<?php
+require 'include/footer.php';

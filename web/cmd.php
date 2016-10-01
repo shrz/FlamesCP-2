@@ -1,9 +1,5 @@
 <?php
-include 'include/login.php';
-if ($logged_in == "false"){
-header("Location: /");
-die();
-}
+require 'include/application.php';
 
 $cmd = $_POST['cmd'];
 

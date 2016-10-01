@@ -1,38 +1,33 @@
 <?php
-session_start();
 
-include 'include/db.php';
+$logged_in_check = false;
+require 'include/application.php';
 
-if (!empty($_POST['username']) && !empty($_POST['password'])){
+if (!empty($_POST['username']) && !empty($_POST['password'])) {
 
-  $username = $_POST['username'];
-  $password = $_POST['password'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-  $check = $conn->prepare('select * from login where username=:username');
-  $check->bindParam(":username", $username);
+    $check = $conn->prepare('select * from login where username=:username');
+    $check->bindParam(":username", $username);
 
-  $check->execute();
-  $results = $check->fetch();
+    $check->execute();
+    $results = $check->fetch();
 
-  if (!$check->rowCount() > 0) {
-    header("Location: /?err=invalid");
-    die();
-  }
-  if(!password_verify($password, $results['password']) {
-    header("Location: /?err=invalid");
-    die();
-  }
+    if (!$check->rowCount() > 0) {
+        header("Location: /?err=invalid");
+        die();
+    }
+    if (!password_verify($password, $results['password'])) {
+        header("Location: /?err=invalid");
+        die();
+    }
 
-$_SESSION['username'] = $username;
+    $_SESSION['username'] = $username;
+    $_SESSION['rank'] = $results['status'];
 
-$_SESSION['rank'] = $results['status'];
-
-header("Location: /");
+    header("Location: /");
 
 } else {
-
-header("Location: /?err=missing");
-
+    header("Location: /?err=missing");
 }
-
-?>
