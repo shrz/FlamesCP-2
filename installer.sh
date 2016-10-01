@@ -1,4 +1,14 @@
 #!/bin/bash
+
+if [ "$1" = "--force" ]; then
+echo "Danger: You have bypassed pre-installation checks."
+else
+if [ ! -f /etc/centos-release ]; then
+echo "You must be running CentOS 6. If you are, skip this warning by adding the --force argument."
+exit 0
+fi
+fi
+
 echo "     _______   _______   _______"
 echo "    / _____/  / _____/  / ___  /"
 echo "   / /____   / /       / /__/ /"
