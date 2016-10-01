@@ -20,7 +20,6 @@ Installing FlamesCP 2 is pretty simple - all you have to do is execute the follo
 
     cd ~
     wget https://raw.githubusercontent.com/FlamesRunner/FlamesCP-2/master/installer.sh
-    chmod 755 installer.sh
     ./installer.sh
 
 ## Support
