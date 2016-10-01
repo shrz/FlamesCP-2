@@ -1,11 +1,5 @@
 <?php
 session_start();
-
-// make sure the session variables have been emptied
-
-$_SESSION['username'] = "";
-$_SESSION['rank'] = "";
-
 // now unset them
 
 unset($_SESSION['username']);
