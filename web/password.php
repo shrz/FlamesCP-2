@@ -24,7 +24,7 @@ $password = $_POST['newpassword'];
 
 $query = $conn->prepare('update login set password=:password where username=:username');
 
-$query->bindParam(':password', password_hash($_POST['password'], PASSWORD_BCRYPT, $bcrypt_opt));
+$query->bindParam(':password', password_hash($_POST['newpassword'], PASSWORD_BCRYPT, $bcrypt_opt));
 $query->bindParam(':username', $_SESSION['username']);
 
 $query->execute();
