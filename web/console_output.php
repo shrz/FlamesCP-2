@@ -1,4 +1,14 @@
 <?php
+
+require 'include/login.php';
+
+if (!isset($_SESSION['username'])){
+
+	header('Location: /');
+	die();
+	
+}
+
 /*
  * Easy PHP Tail 
  * by: Thomas Depole
