@@ -71,7 +71,7 @@ echo "Now installing dependencies..."
 
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
-yum install screen nano httpd mysql-server php55w php55w-mysql php55w-pdo php55w-gd unzip gcc make sudo java7 git curl curl-devel vsftpd pam pam-devel pam_mysql -y &> /dev/null
+yum install screen nano httpd mysql-server php55w php55w-mysql php55w-cli php55w-pdo php55w-gd unzip gcc make sudo java7 git curl curl-devel vsftpd pam pam-devel pam_mysql -y &> /dev/null
 
 echo "The required packages have been installed."
 sleep 1
