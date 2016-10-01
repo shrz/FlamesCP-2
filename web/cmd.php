@@ -1,6 +1,6 @@
 <?php
 include 'include/login.php';
-if ($logged_in == "false"){
+if (!isset($_SESSION['username']){
 header("Location: /");
 die();
 }
