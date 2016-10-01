@@ -138,7 +138,7 @@ EON
 
 echo "Configuring FTP..."
 
-vsftpdpassword=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
+vsftpdpassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 mysql -uroot -p$mysqlpass -e "CREATE DATABASE vsftpd;"
 mysql -uroot -p$mysqlpass -e "USE vsftpd; CREATE TABLE `accounts` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `username` VARCHAR(30) NOT NULL, `pass` VARCHAR(50) NOT NULL , UNIQUE(`username`)) ENGINE = MYISAM ;"
 mysql -uroot -p$mysqlpass -e "use vsftpd; GRANT SELECT ON vsftpd.* TO 'vsftpd'@'localhost' IDENTIFIED BY '$vsftpdpassword'; flush privileges;"
