@@ -51,7 +51,7 @@ if ($_POST['act'] == "remove" && !empty($_POST['account'])){
 $delquery = $db->prepare('delete from accounts where username=:userdel');
 $delquery->bindParam(':userdel', $_POST['account']);
 $delquery->execute();
-file_put_contents("/var/run/flamescp.sock", "reloadftp\n", FILE_APPEND | LOCK_EX);
+file_put_contents("/var/run/flamescp.sock", "systemcmd--------reloadftp\n", FILE_APPEND | LOCK_EX);
 echo '<div class="alert alert-danger"><b>The account '.$_POST['account'].' has been removed.</b></div>';
 
 }
@@ -118,7 +118,7 @@ $create->bindParam(':username', $_POST['username']);
 $create->bindParam(':password', md5($_POST['password']));
 $create->execute();
 
-file_put_contents("/var/run/flamescp.sock", "reloadftp\n", FILE_APPEND | LOCK_EX);
+file_put_contents("/var/run/flamescp.sock", "systemcmd--------reloadftp\n", FILE_APPEND | LOCK_EX);
 
 echo '<div class="alert alert-success">Account created. Click <a href="ftp.php">here</a> to reload the page.</div>';
 

@@ -16,11 +16,11 @@ while read line; do
 echo "[`date -u`] Received: ${line}" > /tmp/flamescp.log
 echo "[`date -u`] Received: ${line}"
 
-if [ "$line" == "start" ]; then
+if [ "$line" == "systemcmd--------start" ]; then
 screen -dmS mcserver /scripts/start.sh
-else if [ "$line" == "stop" ]; then
+else if [ "$line" == "systemcmd--------stop" ]; then
 screen -dmS flamescpjob /scripts/stop.sh
-else if [ "$line" == "reloadftp" ]; then
+else if [ "$line" == "systemcmd--------reloadftp" ]; then
 service vsftpd restart
 else
 /scripts/sendcmd.sh "$line"
