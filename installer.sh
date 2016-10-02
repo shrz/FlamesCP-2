@@ -178,7 +178,7 @@ service httpd restart &> /dev/null
 echo "-----------------------------------------------------------------------------"
 echo "Congratulations! You have successfully installed FlamesCP 2."
 echo " "
-echo "Please finalize the installation at http://$yourpubip:5555/installer.php"
+echo "Please finalize the installation at http://$yourpubipv4:5555/installer.php"
 echo " "
 echo "-----------------------------------------------------------------------------"
 echo " "
