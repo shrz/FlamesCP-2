@@ -18,7 +18,7 @@ if (!empty($_POST['username']) && !empty($_POST['password'])){
     header("Location: /?err=invalid");
     die();
   }
-  if(!password_verify($password, $results['password']) {
+  if(!password_verify($password, $results['password'])) {
     header("Location: /?err=invalid");
     die();
   }
