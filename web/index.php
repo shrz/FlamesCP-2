@@ -2,7 +2,7 @@
 require 'include/header.php';
 require 'include/login.php';
 
-if (isset($_SESSION['username']){
+if (isset($_SESSION['username'])){
 ?>
 
 <body>
